@@ -1,16 +1,14 @@
 package main
 
 import (
-	"github.com/OkyWiliarso/news-api/database"
-	"github.com/OkyWiliarso/news-api/migrations"
-
-	_ "github.com/jinzhu/gorm/dialects/mysql"
+	"github.com/OkyWiliarso/news-api/app"
+	"github.com/OkyWiliarso/news-api/config"
 )
 
 func main() {
+	config := config.GetConfig()
 
-	database.InitDB()
-	migrations.Migrate()
-
-	defer database.DBCon.Close()
+	app := &app.App{}
+	app.Initialize(config)
+	app.Run(":3000")
 }
