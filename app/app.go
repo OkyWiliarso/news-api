@@ -42,14 +42,32 @@ func (a *App) Initialize(config *config.Config) {
 
 func (a *App) setRouters() {
 	a.Get("/news", a.GetAllnews)
+	a.Post("/news", a.CreateNews)
+	a.Put("/news/{id}", a.UpdateNews)
 }
 
 func (a *App) Get(path string, f func(w http.ResponseWriter, r *http.Request)) {
 	a.Router.HandleFunc(path, f).Methods("GET")
 }
 
+func (a *App) Post(path string, f func(w http.ResponseWriter, r *http.Request)) {
+	a.Router.HandleFunc(path, f).Methods("POST")
+}
+
+func (a *App) Put(path string, f func(w http.ResponseWriter, r *http.Request)) {
+	a.Router.HandleFunc(path, f).Methods("PUT")
+}
+
 func (a *App) GetAllnews(w http.ResponseWriter, r *http.Request) {
 	handler.GetAllnews(a.DB, w, r)
+}
+
+func (a *App) CreateNews(w http.ResponseWriter, r *http.Request) {
+	handler.CreateNews(a.DB, w, r)
+}
+
+func (a *App) UpdateNews(w http.ResponseWriter, r *http.Request) {
+	handler.UpdateNews(a.DB, w, r)
 }
 
 func (a *App) Run(host string) {

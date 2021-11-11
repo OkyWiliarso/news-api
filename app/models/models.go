@@ -7,6 +7,7 @@ import (
 
 type News struct {
 	gorm.Model
+	ID      int    `json:"id"`
 	Title   string `json:"title"`
 	Content string `json:"content"`
 	Status  string `json:"status"`
@@ -15,6 +16,7 @@ type News struct {
 
 type Tags struct {
 	gorm.Model
+	ID     int    `json:"id"`
 	NewsId int    `json:"news_id"`
 	Topic  string `json:"status"`
 }
