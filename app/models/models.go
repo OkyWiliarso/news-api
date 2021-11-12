@@ -20,7 +20,7 @@ type News struct {
 
 type Tags struct {
 	ID    int    `json:"id"`
-	Topic string `json:"status"`
+	Topic string `json:"topic"`
 	News  []News `gorm:"many2many:news_tags;"`
 
 	CreatedAt time.Time

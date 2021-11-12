@@ -10,8 +10,9 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
-func GetAllnews(db *gorm.DB, w http.ResponseWriter, r *http.Request) {
+func GetAllNews(db *gorm.DB, w http.ResponseWriter, r *http.Request) {
 	news := []models.News{}
+
 	db.Find(&news)
 	respondJSON(w, http.StatusOK, news)
 }
@@ -26,7 +27,7 @@ func CreateNews(db *gorm.DB, w http.ResponseWriter, r *http.Request) {
 	}
 	defer r.Body.Close()
 
-	if err := db.Save(&news).Error; err != nil {
+	if err := db.Omit("Tags").Create(&news).Error; err != nil {
 		respondError(w, http.StatusInternalServerError, err.Error())
 		return
 	}
@@ -42,7 +43,7 @@ func UpdateNews(db *gorm.DB, w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	news := handleNotFound(db, newsId, w, r)
+	news := handleNewsNotFound(db, newsId, w, r)
 	if news == nil {
 		return
 	}
@@ -70,7 +71,7 @@ func DeleteNews(db *gorm.DB, w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	news := handleNotFound(db, newsId, w, r)
+	news := handleNewsNotFound(db, newsId, w, r)
 	if news == nil {
 		return
 	}
@@ -81,7 +82,7 @@ func DeleteNews(db *gorm.DB, w http.ResponseWriter, r *http.Request) {
 	respondJSON(w, http.StatusNoContent, nil)
 }
 
-func handleNotFound(db *gorm.DB, id int, w http.ResponseWriter, r *http.Request) *models.News {
+func handleNewsNotFound(db *gorm.DB, id int, w http.ResponseWriter, r *http.Request) *models.News {
 	news := models.News{}
 	if err := db.First(&news, models.News{ID: id}).Error; err != nil {
 		respondError(w, http.StatusNotFound, err.Error())

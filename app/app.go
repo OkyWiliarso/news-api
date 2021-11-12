@@ -41,10 +41,15 @@ func (a *App) Initialize(config *config.Config) {
 }
 
 func (a *App) setRouters() {
-	a.Get("/news", a.GetAllnews)
+	a.Get("/news", a.GetAllNews)
 	a.Post("/news", a.CreateNews)
 	a.Put("/news/{id}", a.UpdateNews)
 	a.Delete("/news/{id}", a.DeleteNews)
+
+	a.Get("/tags", a.GetAllTags)
+	a.Post("/tags", a.CreateTags)
+	a.Put("/tags/{id}", a.UpdateTags)
+	a.Delete("/tags/{id}", a.DeleteTags)
 }
 
 func (a *App) Get(path string, f func(w http.ResponseWriter, r *http.Request)) {
@@ -63,8 +68,8 @@ func (a *App) Delete(path string, f func(w http.ResponseWriter, r *http.Request)
 	a.Router.HandleFunc(path, f).Methods("DELETE")
 }
 
-func (a *App) GetAllnews(w http.ResponseWriter, r *http.Request) {
-	handler.GetAllnews(a.DB, w, r)
+func (a *App) GetAllNews(w http.ResponseWriter, r *http.Request) {
+	handler.GetAllNews(a.DB, w, r)
 }
 
 func (a *App) CreateNews(w http.ResponseWriter, r *http.Request) {
@@ -77,6 +82,22 @@ func (a *App) UpdateNews(w http.ResponseWriter, r *http.Request) {
 
 func (a *App) DeleteNews(w http.ResponseWriter, r *http.Request) {
 	handler.DeleteNews(a.DB, w, r)
+}
+
+func (a *App) GetAllTags(w http.ResponseWriter, r *http.Request) {
+	handler.GetAllTags(a.DB, w, r)
+}
+
+func (a *App) CreateTags(w http.ResponseWriter, r *http.Request) {
+	handler.CreateTags(a.DB, w, r)
+}
+
+func (a *App) UpdateTags(w http.ResponseWriter, r *http.Request) {
+	handler.UpdateTags(a.DB, w, r)
+}
+
+func (a *App) DeleteTags(w http.ResponseWriter, r *http.Request) {
+	handler.DeleteTags(a.DB, w, r)
 }
 
 func (a *App) Run(host string) {
