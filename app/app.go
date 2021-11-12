@@ -42,7 +42,8 @@ func (a *App) Initialize(config *config.Config) {
 
 func (a *App) setRouters() {
 	a.Get("/news", a.GetAllNews)
-	a.Get("/news/{status}", a.GetNewsByStatus)
+	a.Get("/news/status/{status}", a.GetNewsByStatus)
+	a.Get("/news/topic/{topic}", a.GetNewsByTopic)
 	a.Post("/news", a.CreateNews)
 	a.Put("/news/{id}", a.UpdateNews)
 	a.Delete("/news/{id}", a.DeleteNews)
@@ -75,6 +76,10 @@ func (a *App) GetAllNews(w http.ResponseWriter, r *http.Request) {
 
 func (a *App) GetNewsByStatus(w http.ResponseWriter, r *http.Request) {
 	handler.GetNewsByStatus(a.DB, w, r)
+}
+
+func (a *App) GetNewsByTopic(w http.ResponseWriter, r *http.Request) {
+	handler.GetNewsByTopic(a.DB, w, r)
 }
 
 func (a *App) CreateNews(w http.ResponseWriter, r *http.Request) {

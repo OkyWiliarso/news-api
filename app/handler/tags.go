@@ -12,7 +12,7 @@ import (
 
 func GetAllTags(db *gorm.DB, w http.ResponseWriter, r *http.Request) {
 	tags := []models.Tags{}
-	db.Find(&tags)
+	db.Preload("News").Find(&tags)
 	respondJSON(w, http.StatusOK, tags)
 }
 

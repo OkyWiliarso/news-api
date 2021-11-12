@@ -27,6 +27,16 @@ func GetNewsByStatus(db *gorm.DB, w http.ResponseWriter, r *http.Request) {
 	respondJSON(w, http.StatusOK, news)
 }
 
+func GetNewsByTopic(db *gorm.DB, w http.ResponseWriter, r *http.Request) {
+	news := []models.News{}
+	vars := mux.Vars(r)
+
+	topic := vars["topic"]
+
+	db.Preload("Tags", "topic = ?", topic).Find(&news)
+	respondJSON(w, http.StatusOK, news)
+}
+
 func CreateNews(db *gorm.DB, w http.ResponseWriter, r *http.Request) {
 	news := models.News{}
 
