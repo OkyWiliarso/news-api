@@ -13,7 +13,17 @@ import (
 func GetAllNews(db *gorm.DB, w http.ResponseWriter, r *http.Request) {
 	news := []models.News{}
 
-	db.Find(&news)
+	db.Preload("Tags").Find(&news)
+	respondJSON(w, http.StatusOK, news)
+}
+
+func GetNewsByStatus(db *gorm.DB, w http.ResponseWriter, r *http.Request) {
+	news := []models.News{}
+	vars := mux.Vars(r)
+
+	status := vars["status"]
+
+	db.Where("status = ?", status).Find(&news)
 	respondJSON(w, http.StatusOK, news)
 }
 
@@ -84,7 +94,7 @@ func DeleteNews(db *gorm.DB, w http.ResponseWriter, r *http.Request) {
 
 func handleNewsNotFound(db *gorm.DB, id int, w http.ResponseWriter, r *http.Request) *models.News {
 	news := models.News{}
-	if err := db.First(&news, models.News{ID: id}).Error; err != nil {
+	if err := db.Preload("Tags").First(&news, models.News{ID: id}).Error; err != nil {
 		respondError(w, http.StatusNotFound, err.Error())
 		return nil
 	}
