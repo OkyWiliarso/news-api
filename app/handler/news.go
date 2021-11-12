@@ -61,6 +61,26 @@ func UpdateNews(db *gorm.DB, w http.ResponseWriter, r *http.Request) {
 	respondJSON(w, http.StatusOK, news)
 }
 
+func DeleteNews(db *gorm.DB, w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+
+	newsId, err := strconv.Atoi(vars["id"])
+	if err != nil {
+		respondError(w, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	news := handleNotFound(db, newsId, w, r)
+	if news == nil {
+		return
+	}
+	if err := db.Delete(&news).Error; err != nil {
+		respondError(w, http.StatusInternalServerError, err.Error())
+		return
+	}
+	respondJSON(w, http.StatusNoContent, nil)
+}
+
 func handleNotFound(db *gorm.DB, id int, w http.ResponseWriter, r *http.Request) *models.News {
 	news := models.News{}
 	if err := db.First(&news, models.News{ID: id}).Error; err != nil {

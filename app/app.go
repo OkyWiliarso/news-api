@@ -44,6 +44,7 @@ func (a *App) setRouters() {
 	a.Get("/news", a.GetAllnews)
 	a.Post("/news", a.CreateNews)
 	a.Put("/news/{id}", a.UpdateNews)
+	a.Delete("/news/{id}", a.DeleteNews)
 }
 
 func (a *App) Get(path string, f func(w http.ResponseWriter, r *http.Request)) {
@@ -58,6 +59,10 @@ func (a *App) Put(path string, f func(w http.ResponseWriter, r *http.Request)) {
 	a.Router.HandleFunc(path, f).Methods("PUT")
 }
 
+func (a *App) Delete(path string, f func(w http.ResponseWriter, r *http.Request)) {
+	a.Router.HandleFunc(path, f).Methods("DELETE")
+}
+
 func (a *App) GetAllnews(w http.ResponseWriter, r *http.Request) {
 	handler.GetAllnews(a.DB, w, r)
 }
@@ -68,6 +73,10 @@ func (a *App) CreateNews(w http.ResponseWriter, r *http.Request) {
 
 func (a *App) UpdateNews(w http.ResponseWriter, r *http.Request) {
 	handler.UpdateNews(a.DB, w, r)
+}
+
+func (a *App) DeleteNews(w http.ResponseWriter, r *http.Request) {
+	handler.DeleteNews(a.DB, w, r)
 }
 
 func (a *App) Run(host string) {
